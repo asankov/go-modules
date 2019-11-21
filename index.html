@@ -1,0 +1,336 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Introduction to Go Modules</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/monokai.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+
+  <style>
+    .code {
+      background-color: black;
+      color: gray;
+      border-radius: 10px;
+      padding: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h2>
+          Introduction to Go Modules
+        </h2>
+      </section>
+      <section>
+        <h2>
+          What is a Go Module?
+        </h2>
+
+        <br>
+        <p>
+          collection of Go packages, <br>
+          stored in a file tree, <br>
+          with a <span class="code">go.mod</span> file at its root
+        </p>
+      </section>
+      <section>
+        <h2>
+          But first...
+        </h2>
+
+        <br>
+        <p>
+          How did we got here?
+        </p>
+      </section>
+      <section>
+        <section>
+          <h2>
+            In the beginning...
+          </h2>
+
+          <br>
+          <p>
+            All our dependencies should live under <span class="code">$GOPATH</span>
+          </p>
+          <br>
+          <p>
+            Install them with <span class="code">go
+              get</span>
+          </p>
+        </section>
+        <section>
+          <h2>
+            But what about versioning?
+          </h2>
+          <br>
+          <p>
+            Everytime we build our application, the latest version of our dependencies would be installed.
+          </p>
+        </section>
+        <section>
+          <span>
+            <p> What if someone introduced a breaking change...</p>
+            <p> ... or decides to delete their repo?</p>
+
+            <br><br><br>
+            <a style="font-size: 20px;" href="https://www.theregister.co.uk/2016/03/23/npm_left_pad_chaos/">How one
+              developer just broke Node,
+              Babel and thousands of projects in 11 lines of JavaScript </a>
+          </span>
+        </section>
+      </section>
+      <section>
+        <section>
+          <h2>Enter Go 1.5</h2>
+        </section>
+        <section>
+          <h3>
+            Go 1.5 introduced the experimental <span class="code">vendor</span> feature
+          </h3>
+
+          <br>
+          <p>This means that whenever we run the <span class="code">go</span> command it would look for our
+            dependencies under <span class="code">./vendor</span>
+          </p>
+        </section>
+        <section>
+          <p>People started building tools around that</p>
+          <ul>
+            <li class="code" style="margin-bottom: 6px">dep</li>
+            <li class="code" style="margin-bottom: 6px">govendor</li>
+            <li class="code" style="margin-bottom: 6px">glide</li>
+            <li class="code" style="margin-bottom: 6px">godep</li>
+            <li class="code" style="margin-bottom: 6px">gvt</li>
+            <li class="code" style="margin-bottom: 6px">govend</li>
+          </ul>
+        </section>
+        <section>
+          <h4>
+            All of the operated on the same principle
+          </h4>
+
+          <br>
+          <p class="fragment"> Describe your dependencies and their version in a manifest file </p>
+          <p class="fragment"> Run a simple command to download them into the <span class="code">vendor</span> folder
+          </p>
+
+          <br>
+          <h4 class="fragment"> Familiar? </h4>
+        </section>
+        <section>
+          <h4>
+            Most of these tools are now deprecated and recommend using go modules
+          </h4>
+
+          <div>
+            <span style="display: flex; justify-content: center;">
+              <span style="margin: 20px; font-weight: bold;">govendor</span>
+              <img src="govendor.png" alt="" height="75px">
+            </span>
+            <span style="display: flex; justify-content: center;">
+              <span style="margin: 20px; font-weight: bold;"> glide </span>
+              <img src="glide.png" alt="" height="75px">
+            </span>
+            <span style="display: flex; justify-content: space-around;">
+              <img src="godep.png" alt="" height="75px">
+              <img src="gvt.png" alt="" height="75px">
+            </span>
+          </div>
+        </section>
+      </section>
+      <section>
+        <section>
+          <h3>
+            So what exactly are go modules?
+          </h3>
+        </section>
+        <section>
+          <h3>
+            As of Go 1.11 modules are Go's new dependency management system
+          </h3>
+        </section>
+        <section>
+          <h3>
+            The <span class="code">go.mod</span> file
+          </h3>
+
+
+          <br>
+          <p style="font-weight: bold;"> Describes the dependencies and their versions</p>
+          <br>
+          <section data-markdown>
+            <script type="text/template">
+                  ```go
+                  module github.com/docker/dmt
+
+                  go 1.13
+
+                  require (
+                    github.com/sirupsen/logrus v1.4.2
+                    github.com/docker/docker v1.4.2-0.20190511020111-3998dffb806f
+                    github.com/google/uuid v1.1.1
+                  )
+                  ```
+                  </script>
+          </section>
+        </section>
+        <section>
+          <h3>Managing dependencies</h3>
+
+          <br>
+          Managed by the <span class="code">go mod</span> command
+          <ul style="font-size: 20px; margin: 10px 0;">
+            <li style="margin-top: 10px;"> <span class="code">go mod download</span> - download modules to local cache
+              (<span class="code">$GOPATH/pkg/mod</span>)
+            </li>
+            <li style="margin-top: 10px;"> <span class="code">go mod tidy</span> - add missing and remove unused modules
+            </li>
+            <li style="margin-top: 10px;"> <span class="code">go mod vendor</span> - make vendored copy of dependencies
+            </li>
+          </ul>
+
+          <br><br>
+          All <span class="code">go</span> commands are module aware and all of them interact with the <span
+            class="code">go.mod</span> file
+        </section>
+        <section>
+          <h3>
+            Dependency version can be:
+          </h3>
+
+          <p>
+            <ul>
+              <li> git tag (preferrably) </li>
+              <li> git commit hash</li>
+            </ul>
+          </p>
+
+          <br>
+          <section data-markdown>
+            <script type="text/template">
+                    ```go
+                    module github.com/docker/dmt
+  
+                    go 1.13
+  
+                    require (
+                      // here v.1.4.2 is just a git tag
+                      github.com/sirupsen/logrus v1.4.2 
+                      // either this module has no tags,
+                      // or the develop explicitly asked for this commit hash
+                      github.com/docker/docker v1.4.2-0.20190511020111-3998dffb806f
+                    )
+                    ```
+            </script>
+          </section>
+        </section>
+        <section>
+          <h3>
+            Easier migration from one major version to another smoother
+          </h3>
+
+          <br>
+          <p>
+            Developers are adviced to publish different modules for their different major version
+          </p>
+          <br>
+          <p> This is easy, because Go modules allows to have modules in a sub-directory of other modules</p>
+        </section>
+        <section>
+          <h3> Central repository trust</h3>
+
+          <br>
+          <p>
+            Along with <span class="code">go.mod</span> we also have <span class="code">go.sum</span> file.
+            This contains the checksums of all our dependencies
+          </p>
+          <br>
+          <p>
+            Therefore, if we try to download a source and the repository is compromised we will know the downloaded
+            version does not match the expected one
+          </p>
+        </section>
+        <section>
+          <h3> But what about new dependencies?</h3>
+          <br>
+          <p>
+            The Go team released <a href="https://sum.golang.org/"> a public registry</a> , which will contain the
+            checksums of all the version of
+            all the public modules available
+          </p>
+          <br>
+          <img src="gosum.png" alt="">
+        </section>
+        <section>
+          <h3>GOPROXY</h3>
+
+          <br>
+          <p>
+            Anothing thing which was introduces was <span class="code">$GOPROXY</span>.
+            If this environment variable is set, the modules will be downloaded from there
+          </p>
+
+          <br>
+          <p>
+            The Go team already released the <a href="https://proxy.golang.org/">offical Golang proxy </a>
+          </p>
+        </section>
+      </section>
+      </section>
+      <section>
+        <h2>
+          Go Modules
+        </h2>
+        <br>
+        <ul>
+          <li> Go's new official dependency management system </li>
+          <li> describe your dependencies and their versions in one place </li>
+          <li> manage them in a seamless way </li>
+          <li> migrate smoothly between major version </li>
+          <li> trustless repositories </li>
+          <li> faster and centralized dependency management </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <script src="js/reveal.js"></script>
+
+  <script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+      hash: true,
+      dependencies: [
+        { src: 'plugin/markdown/marked.js' },
+        { src: 'plugin/markdown/markdown.js' },
+        { src: 'plugin/notes/notes.js', async: true },
+        { src: 'plugin/highlight/highlight.js', async: true }
+      ]
+    });
+  </script>
+</body>
+
+</html>

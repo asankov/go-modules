@@ -19,4 +19,4 @@ jobs:
         commit-message: Update presentation
         title: Update presentation
         branch: gh-pages
-
+        branch-suffix: none

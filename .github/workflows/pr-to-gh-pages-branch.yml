@@ -1,11 +1,11 @@
-name: Pull Request on Branch Push
+name: Open PR to `gh-pages`
 on:
   push:
     branches:
       - master
 jobs:
-  auto-pull-request:
-    name: PullRequestAction
+  pr-to-gh-pages:
+    name: open-pr-to-gh-pages
     runs-on: ubuntu-latest
     steps:
       - name: pull-request-action
@@ -14,3 +14,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH_PREFIX: "master"
           PULL_REQUEST_BRANCH: "gh-pages"
+          PULL_REQUEST_TITLE: "Update presentation"

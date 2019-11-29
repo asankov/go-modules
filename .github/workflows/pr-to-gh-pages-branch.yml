@@ -1,23 +1,16 @@
-name: CI
-
+name: Pull Request on Branch Push
 on:
   push:
-    branches: 
+    branches:
       - master
-
 jobs:
-  build:
-
+  auto-pull-request:
+    name: PullRequestAction
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v1.8.0
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: Update presentation
-        title: Update presentation
-        base: gh-pages
-        branch: master
-        branch-suffix: none
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_PREFIX: "master"
+          PULL_REQUEST_BRANCH: "gh-pages"

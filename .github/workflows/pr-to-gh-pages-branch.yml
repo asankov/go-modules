@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v1.8.0
+      with:
+        commit-message: Update presentation
+        title: Update presentation
+        branch: gh-pages
+

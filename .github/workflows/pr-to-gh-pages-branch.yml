@@ -18,5 +18,6 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: Update presentation
         title: Update presentation
+        base: master
         branch: gh-pages
         branch-suffix: none
